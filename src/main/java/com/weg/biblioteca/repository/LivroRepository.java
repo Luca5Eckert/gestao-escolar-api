@@ -97,7 +97,7 @@ public class LivroRepository {
         ) {
 
             statement.setString(1, livro.getTitulo());
-            statement.setString(2, livro.getTitulo());
+            statement.setString(2, livro.getAutor());
             statement.setInt(3, livro.getAnoPublicacao());
 
             int affectedRows = statement.executeUpdate();

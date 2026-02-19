@@ -45,7 +45,7 @@ public class EmprestimoController {
         return usuarioService.update(id, updateEmprestimoRequest);
     }
 
-    @PostMapping("{id}/devolucao")
+    @PutMapping("{id}/devolucao")
     public Emprestimo devolver(
             @PathVariable(name = "id") int id
     ) {

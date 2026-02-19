@@ -13,7 +13,6 @@ public class Livro {
     private int anoPublicacao;
 
     public Livro(String titulo, String autor, int anoPublicacao) {
-        this.id = id;
         this.titulo = titulo;
         this.autor = autor;
         this.anoPublicacao = anoPublicacao;

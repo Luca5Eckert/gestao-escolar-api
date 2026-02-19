@@ -8,6 +8,7 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -34,12 +35,17 @@ public class EmprestimoRepository {
             List<Emprestimo> contatoes = new ArrayList<>();
 
             while (resultSet.next()) {
+
+                LocalDate dataDevolucao = resultSet.getDate("data_devolucao") != null
+                        ? resultSet.getDate("data_devolucao").toLocalDate()
+                        : null;
+
                 Emprestimo emprestimo = new Emprestimo(
                         resultSet.getInt("id"),
                         resultSet.getInt("livro_id"),
                         resultSet.getInt("usuario_id"),
                         resultSet.getDate("data_emprestimo").toLocalDate(),
-                        resultSet.getDate("data_devolucao").toLocalDate()
+                        dataDevolucao
                 );
                 contatoes.add(emprestimo);
             }
@@ -74,12 +80,17 @@ public class EmprestimoRepository {
 
             try (var resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
+
+                    LocalDate dataDevolucao = resultSet.getDate("data_devolucao") != null
+                            ? resultSet.getDate("data_devolucao").toLocalDate()
+                            : null;
+
                     Emprestimo emprestimo = new Emprestimo(
                             resultSet.getInt("id"),
                             resultSet.getInt("livro_id"),
                             resultSet.getInt("usuario_id"),
                             resultSet.getDate("data_emprestimo").toLocalDate(),
-                            resultSet.getDate("data_devolucao").toLocalDate()
+                            dataDevolucao
                     );
                     return Optional.of(emprestimo);
                 }
@@ -93,8 +104,8 @@ public class EmprestimoRepository {
 
     public Emprestimo save(Emprestimo emprestimo) {
         String query = """
-                INSERT INTO emprestimo (livro_id, usuario_id, data_emprestimo, data_devolucao)
-                VALUES (?, ?)
+                INSERT INTO emprestimo (livro_id, usuario_id, data_emprestimo)
+                VALUES (?, ?, ?)
                 """;
 
         try (Connection connection = Conexao.toInstance();
@@ -104,7 +115,6 @@ public class EmprestimoRepository {
             statement.setInt(1, emprestimo.getLivroId());
             statement.setInt(2, emprestimo.getUsuarioId());
             statement.setDate(3, Date.valueOf(emprestimo.getDataEmprestimo()));
-            statement.setDate(4, Date.valueOf(emprestimo.getDataDevolucao()));
 
             int affectedRows = statement.executeUpdate();
 
@@ -134,7 +144,8 @@ public class EmprestimoRepository {
     public Emprestimo update(Emprestimo emprestimo) {
         String query = """
                 UPDATE emprestimo
-                SET data_devolucao = ?
+                SET data_devolucao = ?,
+                data_emprestimo = ?
                 WHERE id = ?
                 """;
 
@@ -142,7 +153,8 @@ public class EmprestimoRepository {
              PreparedStatement statement = connection.prepareStatement(query);
         ) {
             statement.setDate(1, Date.valueOf(emprestimo.getDataDevolucao()));
-            statement.setInt(2, emprestimo.getId());
+            statement.setDate(2, Date.valueOf(emprestimo.getDataEmprestimo()));
+            statement.setInt(3, emprestimo.getId());
 
             statement.executeUpdate();
 
@@ -218,12 +230,16 @@ public class EmprestimoRepository {
                 List<Emprestimo> emprestimos = new ArrayList<>();
 
                 while (resultSet.next()) {
+                    LocalDate dataDevolucao = resultSet.getDate("data_devolucao") != null
+                            ? resultSet.getDate("data_devolucao").toLocalDate()
+                            : null;
+
                     Emprestimo emprestimo = new Emprestimo(
                             resultSet.getInt("id"),
                             resultSet.getInt("livro_id"),
                             resultSet.getInt("usuario_id"),
                             resultSet.getDate("data_emprestimo").toLocalDate(),
-                            resultSet.getDate("data_devolucao").toLocalDate()
+                            dataDevolucao
                     );
                     emprestimos.add(emprestimo);
                 }
