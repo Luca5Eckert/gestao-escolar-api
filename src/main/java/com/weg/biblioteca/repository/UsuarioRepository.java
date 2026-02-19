@@ -20,7 +20,7 @@ public class UsuarioRepository {
                 SELECT
                     u.id,
                     u.nome,
-                    u.usuario
+                    u.email
                 FROM
                     usuario u
                 """;
@@ -35,7 +35,7 @@ public class UsuarioRepository {
                 Usuario usuario = new Usuario(
                         resultSet.getInt("id"),
                         resultSet.getString("nome"),
-                        resultSet.getString("usuario")
+                        resultSet.getString("email")
                 );
                 contatoes.add(usuario);
             }
@@ -53,7 +53,7 @@ public class UsuarioRepository {
                 SELECT
                     u.id,
                     u.nome,
-                    u.usuario
+                    u.email
                 FROM
                     usuario u
                 WHERE
@@ -71,7 +71,7 @@ public class UsuarioRepository {
                     Usuario usuario = new Usuario(
                             resultSet.getInt("id"),
                             resultSet.getString("nome"),
-                            resultSet.getString("usuario")
+                            resultSet.getString("email")
                     );
                     return Optional.of(usuario);
                 }
@@ -85,7 +85,7 @@ public class UsuarioRepository {
 
     public Usuario save(Usuario usuario) {
         String query = """
-                INSERT INTO usuario (nome, usuario)
+                INSERT INTO usuario (nome, email)
                 VALUES (?, ?)
                 """;
 
@@ -118,7 +118,7 @@ public class UsuarioRepository {
     public Usuario update(Usuario usuario) {
         String query = """
                 UPDATE usuario
-                SET nome = ?, usuario = ?
+                SET nome = ?, email = ?
                 WHERE id = ?
                 """;
 
