@@ -1,4 +1,4 @@
-package com.weg.biblioteca.dto;
+package com.weg.biblioteca.dto.livro;
 
 public record UpdateLivroRequest(
         String titulo,

@@ -1,7 +1,7 @@
 package com.weg.biblioteca.service;
 
-import com.weg.biblioteca.dto.CreateLivroRequest;
-import com.weg.biblioteca.dto.UpdateLivroRequest;
+import com.weg.biblioteca.dto.livro.CreateLivroRequest;
+import com.weg.biblioteca.dto.livro.UpdateLivroRequest;
 import com.weg.biblioteca.model.Livro;
 import com.weg.biblioteca.repository.LivroRepository;
 import org.springframework.stereotype.Service;

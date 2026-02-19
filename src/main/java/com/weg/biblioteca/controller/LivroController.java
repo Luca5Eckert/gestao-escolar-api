@@ -1,7 +1,7 @@
 package com.weg.biblioteca.controller;
 
-import com.weg.biblioteca.dto.CreateLivroRequest;
-import com.weg.biblioteca.dto.UpdateLivroRequest;
+import com.weg.biblioteca.dto.livro.CreateLivroRequest;
+import com.weg.biblioteca.dto.livro.UpdateLivroRequest;
 import com.weg.biblioteca.model.Livro;
 import com.weg.biblioteca.service.LivroService;
 import org.springframework.web.bind.annotation.*;
