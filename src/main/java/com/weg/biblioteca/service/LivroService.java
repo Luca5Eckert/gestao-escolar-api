@@ -3,6 +3,7 @@ package com.weg.biblioteca.service;
 import com.weg.biblioteca.dto.livro.CreateLivroRequest;
 import com.weg.biblioteca.dto.livro.UpdateLivroRequest;
 import com.weg.biblioteca.model.Livro;
+import com.weg.biblioteca.repository.EmprestimoRepository;
 import com.weg.biblioteca.repository.LivroRepository;
 import org.springframework.stereotype.Service;
 
@@ -12,9 +13,11 @@ import java.util.List;
 public class LivroService {
 
     private final LivroRepository livroRepository;
+    private final EmprestimoRepository emprestimoRepository;
 
-    public LivroService(LivroRepository livroRepository) {
+    public LivroService(LivroRepository livroRepository, EmprestimoRepository emprestimoRepository) {
         this.livroRepository = livroRepository;
+        this.emprestimoRepository = emprestimoRepository;
     }
 
     public Livro create(CreateLivroRequest request){
@@ -49,6 +52,9 @@ public class LivroService {
     }
 
     public void deletar(int id) {
+        if(emprestimoRepository.existsByLivroIdAndDataDevolucaoIsNull(id)){
+            throw new RuntimeException("Livro está emprestado e não pode ser deletado");
+        }
         livroRepository.deleteById(id);
     }
 
