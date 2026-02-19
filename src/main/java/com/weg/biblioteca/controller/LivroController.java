@@ -26,12 +26,12 @@ public class LivroController {
     }
 
     @GetMapping
-    public List<Livro> getLivros() {
+    public List<Livro> findAll() {
         return livroService.findAll();
     }
 
     @GetMapping("/{id}")
-    public Livro getAmigoById(
+    public Livro findById(
             @PathVariable(value = "id") int id
     ) {
         return livroService.findById(id);

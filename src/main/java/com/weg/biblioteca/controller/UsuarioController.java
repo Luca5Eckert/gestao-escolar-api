@@ -26,12 +26,12 @@ public class UsuarioController {
     }
 
     @GetMapping
-    public List<Usuario> getUsuarios() {
+    public List<Usuario> findAll() {
         return usuarioService.findAll();
     }
 
     @GetMapping("/{id}")
-    public Usuario getAmigoById(
+    public Usuario findById(
             @PathVariable(value = "id") int id
     ) {
         return usuarioService.findById(id);

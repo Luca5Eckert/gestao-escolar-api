@@ -1,1 +1,27 @@
-services: {}
+name: "biblioteca"
+
+services:
+  postgres-biblioteca:
+    image: postgres:15-alpine
+    container_name: biblioteca_db
+    restart: unless-stopped
+    shm_size: 256mb
+    command: postgres -c shared_buffers=256MB -c max_connections=200 -c work_mem=16MB
+    env_file: .env
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "3306:3306"
+    volumes:
+      - biblioteca_db_data:/var/lib/postgresql/data
+      - ./scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U root"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  biblioteca_db_data:
+
