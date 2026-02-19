@@ -2,6 +2,7 @@ package com.weg.biblioteca.repository;
 
 import com.weg.biblioteca.config.Conexao;
 import com.weg.biblioteca.model.Emprestimo;
+import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public class EmprestimoRepository {
 
     public List<Emprestimo> getAll() {

@@ -1,27 +1,21 @@
-name: "biblioteca"
-
 services:
-  postgres-biblioteca:
-    image: postgres:15-alpine
+  biblioteca_db:
+    image: mysql:8.0
     container_name: biblioteca_db
     restart: unless-stopped
-    shm_size: 256mb
-    command: postgres -c shared_buffers=256MB -c max_connections=200 -c work_mem=16MB
-    env_file: .env
     environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: biblioteca
     ports:
       - "3306:3306"
     volumes:
-      - biblioteca_db_data:/var/lib/postgresql/data
+      - mysql_db_data:/var/lib/mysql
       - ./scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U root"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot"]
       interval: 5s
       timeout: 5s
       retries: 10
 
 volumes:
-  biblioteca_db_data:
-
+  mysql_db_data:
