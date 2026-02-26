@@ -1,11 +1,11 @@
 services:
-  biblioteca_db:
+  gestao_escolar_db:
     image: mysql:8.0
-    container_name: biblioteca_db
+    container_name: gestao_escolar_db
     restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: biblioteca
+      MYSQL_DATABASE: gestao_escolar
     ports:
       - "3306:3306"
     volumes:

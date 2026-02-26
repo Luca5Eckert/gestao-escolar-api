@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.weg</groupId>
-	<artifactId>biblioteca</artifactId>
+	<artifactId>gestao_escolar</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>biblioteca</name>
-	<description>Projeto 31321</description>
+	<name>gestao_escolar</name>
+	<description>Projeto 313212</description>
 	<url/>
 	<licenses>
 		<license/>
