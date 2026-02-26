@@ -193,5 +193,29 @@ public class AlunoRepository {
             throw new RuntimeException(e);
         }
     }
-    
+
+    public boolean existsByEmail(String email) {
+        String query = """
+                SELECT COUNT(*)
+                FROM aluno
+                WHERE codigo = ?
+                """;
+
+        try (Connection connection = Conexao.toInstance();
+             PreparedStatement statement = connection.prepareStatement(query)
+        ) {
+            statement.setString(1, email);
+
+            try (var resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    return resultSet.getInt(1) > 0;
+                }
+                return false;
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }

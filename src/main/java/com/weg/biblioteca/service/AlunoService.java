@@ -30,6 +30,10 @@ public class AlunoService {
                 request.dataNascimento()
         );
 
+        if(alunoRepository.existsByEmail(aluno.getEmail())){
+            throw new RuntimeException("Email already exists");
+        }
+
         alunoRepository.save(aluno);
 
         return alunoMapper.toResponse(aluno);

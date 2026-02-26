@@ -28,6 +28,10 @@ public class ProfessorService {
                 request.disciplina()
         );
 
+        if(professorRepository.existsByEmail(professor.getEmail())){
+            throw new RuntimeException("Email already exists");
+        }
+
         professorRepository.save(professor);
         
         return professorMapper.toResponse(professor);

@@ -159,4 +159,26 @@ public class ProfessorRepository {
         }
     }
 
+    public boolean existsByEmail(String email) {
+        String query = """
+                SELECT COUNT(*) > 0
+                FROM professor
+                WHERE email = ?
+                """;
+
+        try (Connection connection = Conexao.toInstance();
+             PreparedStatement statement = connection.prepareStatement(query);
+        ) {
+            statement.setString(1, email);
+
+            try (var resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    return resultSet.getBoolean(1);
+                }
+                return false;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
