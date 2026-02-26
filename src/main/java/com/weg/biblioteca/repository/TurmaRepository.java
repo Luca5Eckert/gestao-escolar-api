@@ -1,66 +1,62 @@
 package com.weg.biblioteca.repository;
 
 import com.weg.biblioteca.config.Conexao;
-import com.weg.biblioteca.model.Aluno;
+import com.weg.biblioteca.model.Turma;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class AlunoRepository {
+public class TurmaRepository {
 
-    public List<Aluno> getAll() {
+    public List<Turma> getAll() {
         String query = """
                 SELECT
                     u.id,
                     u.nome,
-                    u.codigo,
-                    u.matricula,
-                    u.data_nascimento
+                    u.curso_id,
+                    u.professor_id
                 FROM
-                    aluno u
+                    turma u
                 """;
 
         try (Connection connection = Conexao.toInstance();
              PreparedStatement statement = connection.prepareStatement(query);
              var resultSet = statement.executeQuery()
         ) {
-            List<Aluno> contatoes = new ArrayList<>();
+            List<Turma> turmas = new ArrayList<>();
 
             while (resultSet.next()) {
-                Aluno aluno = new Aluno(
-                        resultSet.getInt("id"),
+                Turma turma = new Turma(
+                        resultSet.getLong("id"),
                         resultSet.getString("nome"),
-                        resultSet.getString("codigo"),
-                        resultSet.getString("matricula"),
-                        resultSet.getDate("data_nascimento").toLocalDate()
+                        resultSet.getLong("curso_id"),
+                        resultSet.getLong("professor_id")
                 );
-                contatoes.add(aluno);
+                turmas.add(turma);
             }
 
-            return contatoes;
+            return turmas;
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public Optional<Aluno> findById(long id) {
+    public Optional<Turma> findById(Long id) {
         String query = """
                 SELECT
                     u.id,
                     u.nome,
-                    u.codigo,
-                    u.matricula,
-                    u.data_nascimento
+                    u.curso_id,
+                    u.professor_id
                 FROM
-                    aluno u
+                    turma u
                 WHERE
                     u.id = ?
                 """;
@@ -73,14 +69,13 @@ public class AlunoRepository {
 
             try (var resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
-                    Aluno aluno = new Aluno(
-                            resultSet.getInt("id"),
+                    Turma turma = new Turma(
+                            resultSet.getLong("id"),
                             resultSet.getString("nome"),
-                            resultSet.getString("codigo"),
-                            resultSet.getString("matricula"),
-                            resultSet.getDate("data_nascimento").toLocalDate()
+                            resultSet.getLong("curso_id"),
+                            resultSet.getLong("professor_id")
                     );
-                    return Optional.of(aluno);
+                    return Optional.of(turma);
                 }
 
                 return Optional.empty();
@@ -90,33 +85,32 @@ public class AlunoRepository {
         }
     }
 
-    public Aluno save(Aluno aluno) {
+    public Turma save(Turma turma) {
         String query = """
-                INSERT INTO aluno (nome, codigo, matricula, data_nascimento)
-                VALUES (?, ?, ?, ?)
+                INSERT INTO turma (nome, curso_id, professor_id)
+                VALUES (?, ?, ?)
                 """;
 
         try (Connection connection = Conexao.toInstance();
              PreparedStatement statement = connection.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
         ) {
 
-            statement.setString(1, aluno.getNome());
-            statement.setString(2, aluno.getEmail());
-            statement.setString(3, aluno.getMatricula());
-            statement.setDate(4, Date.valueOf(aluno.getDataNascimento()));
+            statement.setString(1, turma.getNome());
+            statement.setLong(2, turma.getCursoId());
+            statement.setLong(3, turma.getProfessorId());
 
-            long affectedRows = statement.executeUpdate();
+            int affectedRows = statement.executeUpdate();
 
             if (affectedRows == 0) {
-                throw new RuntimeException("Creating aluno failed, no rows affected.");
+                throw new RuntimeException("Creating turma failed, no rows affected.");
             }
 
             try (var generatedKeys = statement.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
-                    long id = generatedKeys.getInt(1);
-                    return new Aluno(id, aluno.getNome(), aluno.getEmail(), aluno.getMatricula(), aluno.getDataNascimento());
+                    Long id = generatedKeys.getLong(1);
+                    return new Turma(id, turma.getNome(), turma.getCursoId(), turma.getProfessorId());
                 } else {
-                    throw new RuntimeException("Creating aluno failed, no ID obtained.");
+                    throw new RuntimeException("Creating turma failed, no ID obtained.");
                 }
             }
         } catch (SQLException e) {
@@ -124,33 +118,32 @@ public class AlunoRepository {
         }
     }
 
-    public Aluno update(Aluno aluno) {
+    public Turma update(Turma turma) {
         String query = """
-                UPDATE aluno
-                SET nome = ?, codigo = ?, matricula = ?, data_nascimento = ?
+                UPDATE turma
+                SET nome = ?, curso_id = ?, professor_id = ?
                 WHERE id = ?
                 """;
 
         try (Connection connection = Conexao.toInstance();
              PreparedStatement statement = connection.prepareStatement(query);
         ) {
-            statement.setString(1, aluno.getNome());
-            statement.setString(2, aluno.getEmail());
-            statement.setString(3, aluno.getMatricula());
-            statement.setDate(4, Date.valueOf(aluno.getDataNascimento()));
-            statement.setLong(5, aluno.getId());
+            statement.setString(1, turma.getNome());
+            statement.setLong(2, turma.getCursoId());
+            statement.setLong(3, turma.getProfessorId());
+            statement.setLong(4, turma.getId());
 
             statement.executeUpdate();
 
-            return aluno;
+            return turma;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void deleteById(long id) {
+    public void deleteById(Long id) {
         String query = """
-                DELETE FROM aluno
+                DELETE FROM turma
                 WHERE id = ?
                 """;
 
@@ -165,4 +158,5 @@ public class AlunoRepository {
             throw new RuntimeException(e);
         }
     }
+
 }

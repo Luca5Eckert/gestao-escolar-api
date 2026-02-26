@@ -34,7 +34,7 @@ public class AlunoService {
         return alunoMapper.toResponse(aluno);
     }
 
-    public AlunoResponse findById(int id){
+    public AlunoResponse findById(long id){
         Aluno aluno = alunoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Aluno not found"));
 
@@ -49,7 +49,7 @@ public class AlunoService {
                 .toList();
     }
 
-    public AlunoResponse update(int id, UpdateAlunoRequest request) {
+    public AlunoResponse update(long id, UpdateAlunoRequest request) {
         Aluno aluno = alunoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -63,7 +63,7 @@ public class AlunoService {
         return alunoMapper.toResponse(aluno);
     }
 
-    public void deletar(int id) {
+    public void deletar(long id) {
         alunoRepository.deleteById(id);
     }
 
