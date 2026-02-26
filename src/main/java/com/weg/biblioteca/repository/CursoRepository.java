@@ -1,8 +1,7 @@
 package com.weg.biblioteca.repository;
 
 import com.weg.biblioteca.config.Conexao;
-import com.weg.biblioteca.model.Usuario;
-
+import com.weg.biblioteca.model.Curso;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
@@ -13,49 +12,48 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class UsuarioRepository {
+public class CursoRepository {
 
-    public List<Usuario> getAll() {
+    public List<Curso> getAll() {
         String query = """
                 SELECT
                     u.id,
                     u.nome,
-                    u.email
+                    u.codigo
                 FROM
-                    usuario u
+                    curso u
                 """;
 
         try (Connection connection = Conexao.toInstance();
              PreparedStatement statement = connection.prepareStatement(query);
              var resultSet = statement.executeQuery()
         ) {
-            List<Usuario> contatoes = new ArrayList<>();
+            List<Curso> cursos = new ArrayList<>();
 
             while (resultSet.next()) {
-                Usuario usuario = new Usuario(
-                        resultSet.getInt("id"),
+                Curso curso = new Curso(
+                        resultSet.getLong("id"),
                         resultSet.getString("nome"),
-                        resultSet.getString("email")
+                        resultSet.getString("codigo")
                 );
-                contatoes.add(usuario);
+                cursos.add(curso);
             }
 
-            return contatoes;
+            return cursos;
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
     }
 
-    public Optional<Usuario> findById(int id) {
+    public Optional<Curso> findById(Long id) {
         String query = """
                 SELECT
                     u.id,
                     u.nome,
-                    u.email
+                    u.codigo
                 FROM
-                    usuario u
+                    curso u
                 WHERE
                     u.id = ?
                 """;
@@ -64,16 +62,16 @@ public class UsuarioRepository {
              PreparedStatement statement = connection.prepareStatement(query);
         ) {
 
-            statement.setInt(1, id);
+            statement.setLong(1, id);
 
             try (var resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
-                    Usuario usuario = new Usuario(
-                            resultSet.getInt("id"),
+                    Curso curso = new Curso(
+                            resultSet.getLong("id"),
                             resultSet.getString("nome"),
-                            resultSet.getString("email")
+                            resultSet.getString("codigo")
                     );
-                    return Optional.of(usuario);
+                    return Optional.of(curso);
                 }
 
                 return Optional.empty();
@@ -83,9 +81,9 @@ public class UsuarioRepository {
         }
     }
 
-    public Usuario save(Usuario usuario) {
+    public Curso save(Curso curso) {
         String query = """
-                INSERT INTO usuario (nome, email)
+                INSERT INTO curso (nome, codigo)
                 VALUES (?, ?)
                 """;
 
@@ -93,21 +91,21 @@ public class UsuarioRepository {
              PreparedStatement statement = connection.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
         ) {
 
-            statement.setString(1, usuario.getNome());
-            statement.setString(2, usuario.getEmail());
+            statement.setString(1, curso.getNome());
+            statement.setString(2, curso.getCodigo());
 
             int affectedRows = statement.executeUpdate();
 
             if (affectedRows == 0) {
-                throw new RuntimeException("Creating usuario failed, no rows affected.");
+                throw new RuntimeException("Creating curso failed, no rows affected.");
             }
 
             try (var generatedKeys = statement.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
-                    int id = generatedKeys.getInt(1);
-                    return new Usuario(id, usuario.getNome(), usuario.getEmail());
+                    Long id = generatedKeys.getLong(1);
+                    return new Curso(id, curso.getNome(), curso.getCodigo());
                 } else {
-                    throw new RuntimeException("Creating usuario failed, no ID obtained.");
+                    throw new RuntimeException("Creating curso failed, no ID obtained.");
                 }
             }
         } catch (SQLException e) {
@@ -115,45 +113,43 @@ public class UsuarioRepository {
         }
     }
 
-    public Usuario update(Usuario usuario) {
+    public Curso update(Curso curso) {
         String query = """
-                UPDATE usuario
-                SET nome = ?, email = ?
+                UPDATE curso
+                SET nome = ?, codigo = ?
                 WHERE id = ?
                 """;
 
         try (Connection connection = Conexao.toInstance();
              PreparedStatement statement = connection.prepareStatement(query);
         ) {
-            statement.setString(1, usuario.getNome());
-            statement.setString(2, usuario.getEmail());
-            statement.setInt(3, usuario.getId());
+            statement.setString(1, curso.getNome());
+            statement.setString(2, curso.getCodigo());
+            statement.setLong(3, curso.getId());
 
             statement.executeUpdate();
 
-            return usuario;
+            return curso;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void deleteById(int id) {
+    public void deleteById(Long id) {
         String query = """
-                DELETE FROM usuario
+                DELETE FROM curso
                 WHERE id = ?
                 """;
 
         try (Connection connection = Conexao.toInstance();
              PreparedStatement statement = connection.prepareStatement(query);
         ) {
-            statement.setInt(1, id);
+            statement.setLong(1, id);
 
             statement.executeUpdate();
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
     }
-
 }

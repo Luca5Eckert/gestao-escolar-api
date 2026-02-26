@@ -1,44 +1,47 @@
 package com.weg.biblioteca.repository;
 
 import com.weg.biblioteca.config.Conexao;
-import com.weg.biblioteca.model.Livro;
+import com.weg.biblioteca.model.Aluno;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class LivroRepository {
+public class AlunoRepository {
 
-    public List<Livro> getAll() {
+    public List<Aluno> getAll() {
         String query = """
                 SELECT
-                    l.id,
-                    l.titulo,
-                    l.autor,
-                    l.ano_publicacao
+                    u.id,
+                    u.nome,
+                    u.email,
+                    u.matricula,
+                    u.data_nascimento
                 FROM
-                    livro l
+                    aluno u
                 """;
 
         try (Connection connection = Conexao.toInstance();
              PreparedStatement statement = connection.prepareStatement(query);
              var resultSet = statement.executeQuery()
         ) {
-            List<Livro> contatoes = new ArrayList<>();
+            List<Aluno> contatoes = new ArrayList<>();
 
             while (resultSet.next()) {
-                Livro livro = new Livro(
+                Aluno aluno = new Aluno(
                         resultSet.getInt("id"),
-                        resultSet.getString("titulo"),
-                        resultSet.getString("autor"),
-                        resultSet.getInt("ano_publicacao")
+                        resultSet.getString("nome"),
+                        resultSet.getString("email"),
+                        resultSet.getString("matricula"),
+                        resultSet.getDate("data_nascimento").toLocalDate()
                 );
-                contatoes.add(livro);
+                contatoes.add(aluno);
             }
 
             return contatoes;
@@ -46,20 +49,20 @@ public class LivroRepository {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
     }
 
-    public Optional<Livro> findById(int id) {
+    public Optional<Aluno> findById(int id) {
         String query = """
                 SELECT
-                    l.id,
-                    l.titulo,
-                    l.autor,
-                    l.ano_publicacao
+                    u.id,
+                    u.nome,
+                    u.email,
+                    u.matricula,
+                    u.data_nascimento
                 FROM
-                    livro l
+                    aluno u
                 WHERE
-                    l.id = ?
+                    u.id = ?
                 """;
 
         try (Connection connection = Conexao.toInstance();
@@ -70,13 +73,14 @@ public class LivroRepository {
 
             try (var resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
-                    Livro livro = new Livro(
+                    Aluno aluno = new Aluno(
                             resultSet.getInt("id"),
-                            resultSet.getString("titulo"),
-                            resultSet.getString("autor"),
-                            resultSet.getInt("ano_publicacao")
+                            resultSet.getString("nome"),
+                            resultSet.getString("email"),
+                            resultSet.getString("matricula"),
+                            resultSet.getDate("data_nascimento").toLocalDate()
                     );
-                    return Optional.of(livro);
+                    return Optional.of(aluno);
                 }
 
                 return Optional.empty();
@@ -86,32 +90,33 @@ public class LivroRepository {
         }
     }
 
-    public Livro save(Livro livro) {
+    public Aluno save(Aluno aluno) {
         String query = """
-                INSERT INTO livro (titulo, autor, ano_publicacao)
-                VALUES (?, ?, ?)
+                INSERT INTO aluno (nome, email, matricula, data_nascimento)
+                VALUES (?, ?, ?, ?)
                 """;
 
         try (Connection connection = Conexao.toInstance();
              PreparedStatement statement = connection.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
         ) {
 
-            statement.setString(1, livro.getTitulo());
-            statement.setString(2, livro.getAutor());
-            statement.setInt(3, livro.getAnoPublicacao());
+            statement.setString(1, aluno.getNome());
+            statement.setString(2, aluno.getEmail());
+            statement.setString(3, aluno.getMatricula());
+            statement.setDate(4, Date.valueOf(aluno.getDataNascimento()));
 
             int affectedRows = statement.executeUpdate();
 
             if (affectedRows == 0) {
-                throw new RuntimeException("Creating livro failed, no rows affected.");
+                throw new RuntimeException("Creating aluno failed, no rows affected.");
             }
 
             try (var generatedKeys = statement.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
                     int id = generatedKeys.getInt(1);
-                    return new Livro(id, livro.getTitulo(), livro.getTitulo(), livro.getAnoPublicacao());
+                    return new Aluno(id, aluno.getNome(), aluno.getEmail(), aluno.getMatricula(), aluno.getDataNascimento());
                 } else {
-                    throw new RuntimeException("Creating livro failed, no ID obtained.");
+                    throw new RuntimeException("Creating aluno failed, no ID obtained.");
                 }
             }
         } catch (SQLException e) {
@@ -119,24 +124,25 @@ public class LivroRepository {
         }
     }
 
-    public Livro update(Livro livro) {
+    public Aluno update(Aluno aluno) {
         String query = """
-                UPDATE livro
-                SET titulo = ?, autor = ?, ano_publicacao = ?
+                UPDATE aluno
+                SET nome = ?, email = ?, matricula = ?, data_nascimento = ?
                 WHERE id = ?
                 """;
 
         try (Connection connection = Conexao.toInstance();
              PreparedStatement statement = connection.prepareStatement(query);
         ) {
-            statement.setString(1, livro.getTitulo());
-            statement.setString(2, livro.getAutor());
-            statement.setInt(3, livro.getAnoPublicacao());
-            statement.setInt(4, livro.getId());
+            statement.setString(1, aluno.getNome());
+            statement.setString(2, aluno.getEmail());
+            statement.setString(3, aluno.getMatricula());
+            statement.setDate(4, Date.valueOf(aluno.getDataNascimento()));
+            statement.setInt(5, aluno.getId());
 
             statement.executeUpdate();
 
-            return livro;
+            return aluno;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -144,7 +150,7 @@ public class LivroRepository {
 
     public void deleteById(int id) {
         String query = """
-                DELETE FROM livro
+                DELETE FROM aluno
                 WHERE id = ?
                 """;
 
@@ -158,7 +164,5 @@ public class LivroRepository {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
     }
-
 }
