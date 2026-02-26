@@ -1,0 +1,70 @@
+package com.weg.biblioteca.service;
+
+import com.weg.biblioteca.dto.aluno.AlunoResponse;
+import com.weg.biblioteca.dto.aluno.CreateAlunoRequest;
+import com.weg.biblioteca.dto.aluno.UpdateAlunoRequest;
+import com.weg.biblioteca.mapper.AlunoMapper;
+import com.weg.biblioteca.model.Aluno;
+import com.weg.biblioteca.repository.AlunoRepository;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class AlunoService {
+
+    private final AlunoRepository alunoRepository;
+    private final AlunoMapper alunoMapper;
+
+    public AlunoService(AlunoRepository alunoRepository, AlunoMapper alunoMapper) {
+        this.alunoRepository = alunoRepository;
+        this.alunoMapper = alunoMapper;
+    }
+
+    public AlunoResponse create(CreateAlunoRequest request){
+        Aluno aluno = new Aluno(
+                request.nome(),
+                request.email(),
+                request.matricula(),
+                request.dataNascimento()
+        );
+
+        alunoRepository.save(aluno);
+
+        return alunoMapper.toResponse(aluno);
+    }
+
+    public AlunoResponse findById(int id){
+        Aluno aluno = alunoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Aluno not found"));
+
+        return alunoMapper.toResponse(aluno);
+    }
+
+    public List<AlunoResponse> findAll(){
+        var alunos = alunoRepository.getAll();
+
+        return alunos.stream()
+                .map(alunoMapper::toResponse)
+                .toList();
+    }
+
+    public AlunoResponse update(int id, UpdateAlunoRequest request) {
+        Aluno aluno = alunoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        aluno.update(
+                request.nome(),
+                request.email()
+        );
+
+        alunoRepository.update(aluno);
+
+        return alunoMapper.toResponse(aluno);
+    }
+
+    public void deletar(int id) {
+        alunoRepository.deleteById(id);
+    }
+
+}
