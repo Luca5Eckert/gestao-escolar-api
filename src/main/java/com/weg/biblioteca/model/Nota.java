@@ -51,4 +51,10 @@ public class Nota {
         this.valor = valor;
     }
 
+    public void update(double valor) {
+        if(valor < 0 || valor > 10) {
+            throw new IllegalArgumentException("Valor da nota deve ser entre 0 e 10");
+        }
+        this.valor = valor;
+    }
 }
