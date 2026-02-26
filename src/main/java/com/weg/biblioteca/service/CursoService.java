@@ -3,7 +3,9 @@ package com.weg.biblioteca.service;
 import com.weg.biblioteca.dto.curso.CursoResponse;
 import com.weg.biblioteca.dto.curso.CreateCursoRequest;
 import com.weg.biblioteca.dto.curso.UpdateCursoRequest;
+import com.weg.biblioteca.dto.turma.TurmaResponse;
 import com.weg.biblioteca.mapper.CursoMapper;
+import com.weg.biblioteca.mapper.TurmaMapper;
 import com.weg.biblioteca.model.Curso;
 import com.weg.biblioteca.repository.CursoRepository;
 import org.springframework.stereotype.Service;
@@ -15,10 +17,12 @@ public class CursoService {
 
     private final CursoRepository cursoRepository;
     private final CursoMapper cursoMapper;
+    private final TurmaMapper turmaMapper;
 
-    public CursoService(CursoRepository cursoRepository, CursoMapper cursoMapper) {
+    public CursoService(CursoRepository cursoRepository, CursoMapper cursoMapper, TurmaMapper turmaMapper) {
         this.cursoRepository = cursoRepository;
         this.cursoMapper = cursoMapper;
+        this.turmaMapper = turmaMapper;
     }
 
     public CursoResponse create(CreateCursoRequest request){
@@ -65,4 +69,11 @@ public class CursoService {
         cursoRepository.deleteById(id);
     }
 
+    public List<TurmaResponse> findTurmasByCursoId(long id) {
+        var turmas = cursoRepository.findTurmasByCursoId(id);
+
+        return turmas.stream()
+                .map(turmaMapper::toResponse)
+                .toList();
+    }
 }

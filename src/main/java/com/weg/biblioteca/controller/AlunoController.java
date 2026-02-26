@@ -52,5 +52,12 @@ public class AlunoController {
         alunoService.deletar(id);
     }
 
+    @GetMapping("/{id}/notas")
+    public List<Double> getNotasByAlunoId(
+            @PathVariable(name = "id") long id
+    ) {
+        return alunoService.getNotasByAlunoId(id);
+    }
+
 
 }

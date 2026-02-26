@@ -3,6 +3,7 @@ package com.weg.biblioteca.controller;
 import com.weg.biblioteca.dto.curso.CursoResponse;
 import com.weg.biblioteca.dto.curso.CreateCursoRequest;
 import com.weg.biblioteca.dto.curso.UpdateCursoRequest;
+import com.weg.biblioteca.dto.turma.TurmaResponse;
 import com.weg.biblioteca.service.CursoService;
 import org.springframework.web.bind.annotation.*;
 
@@ -52,5 +53,11 @@ public class CursoController {
         cursoService.deletar(id);
     }
 
+    @GetMapping("/{id}/turmas")
+    public List<TurmaResponse> findTurmasByCursoId(
+            @PathVariable(name = "id") long id
+    ) {
+        return cursoService.findTurmasByCursoId(id);
+    }
 
 }

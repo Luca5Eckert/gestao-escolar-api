@@ -31,7 +31,7 @@ public class AlunoRepository {
              PreparedStatement statement = connection.prepareStatement(query);
              var resultSet = statement.executeQuery()
         ) {
-            List<Aluno> contatoes = new ArrayList<>();
+            List<Aluno> alunos = new ArrayList<>();
 
             while (resultSet.next()) {
                 Aluno aluno = new Aluno(
@@ -41,10 +41,10 @@ public class AlunoRepository {
                         resultSet.getString("matricula"),
                         resultSet.getDate("data_nascimento").toLocalDate()
                 );
-                contatoes.add(aluno);
+                alunos.add(aluno);
             }
 
-            return contatoes;
+            return alunos;
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -165,4 +165,33 @@ public class AlunoRepository {
             throw new RuntimeException(e);
         }
     }
+
+    public List<Double> findNotasByAlunoId(long id) {
+        String query = """
+                SELECT
+                    n.valor
+                FROM
+                    nota n
+                WHERE
+                    n.aluno_id = ?
+                """;
+
+        try (Connection connection = Conexao.toInstance();
+             PreparedStatement statement = connection.prepareStatement(query)
+        ) {
+            statement.setLong(1, id);
+
+            try (var resultSet = statement.executeQuery()) {
+                List<Double> notas = new ArrayList<>();
+                while (resultSet.next()) {
+                    notas.add(resultSet.getDouble("valor"));
+                }
+                return notas;
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    
 }

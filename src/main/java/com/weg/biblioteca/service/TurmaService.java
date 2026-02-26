@@ -1,8 +1,10 @@
 package com.weg.biblioteca.service;
 
+import com.weg.biblioteca.dto.aluno.AlunoResponse;
 import com.weg.biblioteca.dto.turma.TurmaResponse;
 import com.weg.biblioteca.dto.turma.CreateTurmaRequest;
 import com.weg.biblioteca.dto.turma.UpdateTurmaRequest;
+import com.weg.biblioteca.mapper.AlunoMapper;
 import com.weg.biblioteca.mapper.TurmaMapper;
 import com.weg.biblioteca.model.Turma;
 import com.weg.biblioteca.repository.TurmaRepository;
@@ -15,10 +17,12 @@ public class TurmaService {
 
     private final TurmaRepository turmaRepository;
     private final TurmaMapper turmaMapper;
+    private final AlunoMapper alunoMapper;
 
-    public TurmaService(TurmaRepository turmaRepository, TurmaMapper turmaMapper) {
+    public TurmaService(TurmaRepository turmaRepository, TurmaMapper turmaMapper, AlunoMapper alunoMapper) {
         this.turmaRepository = turmaRepository;
         this.turmaMapper = turmaMapper;
+        this.alunoMapper = alunoMapper;
     }
 
     public TurmaResponse create(CreateTurmaRequest request){
@@ -63,4 +67,11 @@ public class TurmaService {
         turmaRepository.deleteById(id);
     }
 
+    public List<AlunoResponse> findAlunosByTurmaId(long id) {
+        var alunos = turmaRepository.findAlunosByTurmaId(id);
+
+        return alunos.stream()
+                .map(alunoMapper::toResponse)
+                .toList();
+    }
 }

@@ -1,6 +1,7 @@
 package com.weg.biblioteca.repository;
 
 import com.weg.biblioteca.config.Conexao;
+import com.weg.biblioteca.model.Aluno;
 import com.weg.biblioteca.model.Turma;
 import org.springframework.stereotype.Repository;
 
@@ -156,6 +157,49 @@ public class TurmaRepository {
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public List<Aluno> findAlunosByTurmaId(long id) {
+        String query = """
+                SELECT
+                    a.id,
+                    a.nome,
+                    a.email,
+                    a.matricula,
+                    a.data_nascimento
+                FROM
+                    aluno a
+                INNER JOIN
+                    turma_aluno ta ON a.id = ta.aluno_id
+                WHERE
+                    ta.turma_id = ?
+                """;
+
+        try (Connection connection = Conexao.toInstance();
+             PreparedStatement statement = connection.prepareStatement(query)
+        ) {
+            statement.setLong(1, id);
+
+            try (var resultSet = statement.executeQuery()) {
+                List<Aluno> alunos = new ArrayList<>();
+
+                while (resultSet.next()) {
+                    Aluno aluno = new Aluno(
+                            resultSet.getInt("id"),
+                            resultSet.getString("nome"),
+                            resultSet.getString("email"),
+                            resultSet.getString("matricula"),
+                            resultSet.getDate("data_nascimento").toLocalDate()
+                    );
+                    alunos.add(aluno);
+                }
+
+                return alunos;
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao buscar alunos da turma: " + id, e);
         }
     }
 

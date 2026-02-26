@@ -2,6 +2,7 @@ package com.weg.biblioteca.repository;
 
 import com.weg.biblioteca.config.Conexao;
 import com.weg.biblioteca.model.Curso;
+import com.weg.biblioteca.model.Turma;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
@@ -152,4 +153,44 @@ public class CursoRepository {
             throw new RuntimeException(e);
         }
     }
+
+    public List<Turma> findTurmasByCursoId(long id) {
+        String query = """
+                SELECT
+                    u.id,
+                    u.nome,
+                    u.curso_id,
+                    u.professor_id
+                FROM
+                    turma u
+                WHERE
+                    u.curso_id = ?
+                """;
+
+        try (Connection connection = Conexao.toInstance();
+             PreparedStatement statement = connection.prepareStatement(query)
+        ) {
+            statement.setLong(1, id);
+
+            try (var resultSet = statement.executeQuery()) {
+                List<Turma> turmas = new ArrayList<>();
+
+                while (resultSet.next()) {
+                    Turma turma = new Turma(
+                            resultSet.getLong("id"),
+                            resultSet.getString("nome"),
+                            resultSet.getLong("curso_id"),
+                            resultSet.getLong("professor_id")
+                    );
+                    turmas.add(turma);
+                }
+
+                return turmas;
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao buscar turmas do curso: " + id, e);
+        }
+    }
+
 }

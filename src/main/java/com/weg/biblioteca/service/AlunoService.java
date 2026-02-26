@@ -6,6 +6,7 @@ import com.weg.biblioteca.dto.aluno.UpdateAlunoRequest;
 import com.weg.biblioteca.mapper.AlunoMapper;
 import com.weg.biblioteca.model.Aluno;
 import com.weg.biblioteca.repository.AlunoRepository;
+import com.weg.biblioteca.repository.NotaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -67,4 +68,7 @@ public class AlunoService {
         alunoRepository.deleteById(id);
     }
 
+    public List<Double> getNotasByAlunoId(long id) {
+        return alunoRepository.findNotasByAlunoId(id);
+    }
 }

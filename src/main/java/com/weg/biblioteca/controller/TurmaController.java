@@ -1,5 +1,6 @@
 package com.weg.biblioteca.controller;
 
+import com.weg.biblioteca.dto.aluno.AlunoResponse;
 import com.weg.biblioteca.dto.turma.TurmaResponse;
 import com.weg.biblioteca.dto.turma.CreateTurmaRequest;
 import com.weg.biblioteca.dto.turma.UpdateTurmaRequest;
@@ -50,6 +51,13 @@ public class TurmaController {
             @PathVariable(name = "id") long id
     ) {
         turmaService.deletar(id);
+    }
+
+    @GetMapping("/{id}/alunos")
+    public List<AlunoResponse> findAlunosByTurmaId(
+            @PathVariable(name = "id") long id
+    ) {
+        return turmaService.findAlunosByTurmaId(id);
     }
 
 
