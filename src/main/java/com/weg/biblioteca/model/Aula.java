@@ -15,6 +15,12 @@ public class Aula {
     public Aula() {
     }
 
+    public Aula(Long turmaId, LocalDateTime dataHora, String assunto) {
+        this.turmaId = turmaId;
+        this.dataHora = dataHora;
+        this.assunto = assunto;
+    }
+
     public Aula(Long id, Long turmaId, LocalDateTime dataHora, String assunto) {
         this.id = id;
         this.turmaId = turmaId;
@@ -52,6 +58,12 @@ public class Aula {
 
     public void setAssunto(String assunto) {
         this.assunto = assunto;
+    }
+
+    public void update(String assunto) {
+        if(assunto != null && !assunto.isEmpty()) {
+            this.assunto = assunto;
+        }
     }
 }
 
