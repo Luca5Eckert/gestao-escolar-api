@@ -9,6 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class TurmaAlunoRepository {
@@ -107,6 +108,61 @@ public class TurmaAlunoRepository {
 
             statement.executeUpdate();
 
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void update(long turmaId, long alunoId, TurmaAluno novo) {
+        String query = """
+                UPDATE turma_aluno
+                SET turma_id = ?, aluno_id = ?
+                WHERE turma_id = ? AND aluno_id = ?
+                """;
+
+        try (Connection connection = Conexao.toInstance();
+             PreparedStatement statement = connection.prepareStatement(query);
+        ) {
+            statement.setLong(1, novo.getTurmaId());
+            statement.setLong(2, novo.getAlunoId());
+            statement.setLong(3, turmaId);
+            statement.setLong(4, alunoId);
+
+            statement.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Optional<TurmaAluno> findByTurmaIdAndAlunoId(long turmaId, long alunoId) {
+        String query = """
+                SELECT
+                    u.turma_id,
+                    u.aluno_id
+                FROM
+                    turma_aluno u
+                WHERE
+                    u.turma_id = ? AND u.aluno_id = ?
+                """;
+
+        try (Connection connection = Conexao.toInstance();
+             PreparedStatement statement = connection.prepareStatement(query);
+        ) {
+            statement.setLong(1, turmaId);
+            statement.setLong(2, alunoId);
+
+            try (var resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    TurmaAluno turmaAluno = new TurmaAluno(
+                            resultSet.getLong("turma_id"),
+                            resultSet.getLong("aluno_id")
+                    );
+                    return Optional.of(turmaAluno);
+                }
+
+                return Optional.empty();
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

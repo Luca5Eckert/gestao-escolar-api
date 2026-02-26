@@ -29,5 +29,8 @@ public class TurmaAluno {
         this.alunoId = alunoId;
     }
 
+    public void update(long turmaId) {
+        this.turmaId = turmaId;
+    }
 }
 
