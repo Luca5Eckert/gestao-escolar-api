@@ -20,7 +20,7 @@ public class AlunoRepository {
                 SELECT
                     u.id,
                     u.nome,
-                    u.email,
+                    u.codigo,
                     u.matricula,
                     u.data_nascimento
                 FROM
@@ -37,7 +37,7 @@ public class AlunoRepository {
                 Aluno aluno = new Aluno(
                         resultSet.getInt("id"),
                         resultSet.getString("nome"),
-                        resultSet.getString("email"),
+                        resultSet.getString("codigo"),
                         resultSet.getString("matricula"),
                         resultSet.getDate("data_nascimento").toLocalDate()
                 );
@@ -56,7 +56,7 @@ public class AlunoRepository {
                 SELECT
                     u.id,
                     u.nome,
-                    u.email,
+                    u.codigo,
                     u.matricula,
                     u.data_nascimento
                 FROM
@@ -76,7 +76,7 @@ public class AlunoRepository {
                     Aluno aluno = new Aluno(
                             resultSet.getInt("id"),
                             resultSet.getString("nome"),
-                            resultSet.getString("email"),
+                            resultSet.getString("codigo"),
                             resultSet.getString("matricula"),
                             resultSet.getDate("data_nascimento").toLocalDate()
                     );
@@ -92,7 +92,7 @@ public class AlunoRepository {
 
     public Aluno save(Aluno aluno) {
         String query = """
-                INSERT INTO aluno (nome, email, matricula, data_nascimento)
+                INSERT INTO aluno (nome, codigo, matricula, data_nascimento)
                 VALUES (?, ?, ?, ?)
                 """;
 
@@ -105,7 +105,7 @@ public class AlunoRepository {
             statement.setString(3, aluno.getMatricula());
             statement.setDate(4, Date.valueOf(aluno.getDataNascimento()));
 
-            int affectedRows = statement.executeUpdate();
+            long affectedRows = statement.executeUpdate();
 
             if (affectedRows == 0) {
                 throw new RuntimeException("Creating aluno failed, no rows affected.");
@@ -113,7 +113,7 @@ public class AlunoRepository {
 
             try (var generatedKeys = statement.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
-                    int id = generatedKeys.getInt(1);
+                    long id = generatedKeys.getInt(1);
                     return new Aluno(id, aluno.getNome(), aluno.getEmail(), aluno.getMatricula(), aluno.getDataNascimento());
                 } else {
                     throw new RuntimeException("Creating aluno failed, no ID obtained.");
@@ -127,7 +127,7 @@ public class AlunoRepository {
     public Aluno update(Aluno aluno) {
         String query = """
                 UPDATE aluno
-                SET nome = ?, email = ?, matricula = ?, data_nascimento = ?
+                SET nome = ?, codigo = ?, matricula = ?, data_nascimento = ?
                 WHERE id = ?
                 """;
 
@@ -138,7 +138,7 @@ public class AlunoRepository {
             statement.setString(2, aluno.getEmail());
             statement.setString(3, aluno.getMatricula());
             statement.setDate(4, Date.valueOf(aluno.getDataNascimento()));
-            statement.setInt(5, aluno.getId());
+            statement.setLong(5, aluno.getId());
 
             statement.executeUpdate();
 
@@ -148,7 +148,7 @@ public class AlunoRepository {
         }
     }
 
-    public void deleteById(int id) {
+    public void deleteById(long id) {
         String query = """
                 DELETE FROM aluno
                 WHERE id = ?
@@ -157,7 +157,7 @@ public class AlunoRepository {
         try (Connection connection = Conexao.toInstance();
              PreparedStatement statement = connection.prepareStatement(query);
         ) {
-            statement.setInt(1, id);
+            statement.setLong(1, id);
 
             statement.executeUpdate();
 

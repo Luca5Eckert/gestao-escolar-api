@@ -9,6 +9,11 @@ public class Curso {
     public Curso() {
     }
 
+    public Curso(String nome, String codigo) {
+        this.nome = nome;
+        this.codigo = codigo;
+    }
+
     public Curso(Long id, String nome, String codigo) {
         this.id = id;
         this.nome = nome;
@@ -37,5 +42,14 @@ public class Curso {
 
     public void setCodigo(String codigo) {
         this.codigo = codigo;
+    }
+
+    public void update(String nome, String codigo) {
+        if(nome != null) {
+            this.nome = nome;
+        }
+        if(codigo != null) {
+            this.codigo = codigo;
+        }
     }
 }

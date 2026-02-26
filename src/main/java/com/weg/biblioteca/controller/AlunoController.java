@@ -32,14 +32,14 @@ public class AlunoController {
 
     @GetMapping("/{id}")
     public AlunoResponse findById(
-            @PathVariable(value = "id") int id
+            @PathVariable(value = "id") long id
     ) {
         return alunoService.findById(id);
     }
 
     @PutMapping("{id}")
     public AlunoResponse update(
-            @PathVariable(name = "id") int id,
+            @PathVariable(name = "id") long id,
             @RequestBody UpdateAlunoRequest updateAlunoRequest
     ) {
         return alunoService.update(id, updateAlunoRequest);
@@ -47,7 +47,7 @@ public class AlunoController {
 
     @DeleteMapping("{id}")
     public void delete(
-            @PathVariable(name = "id") int id
+            @PathVariable(name = "id") long id
     ) {
         alunoService.deletar(id);
     }

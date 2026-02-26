@@ -33,7 +33,7 @@ public class ProfessorService {
         return professorMapper.toResponse(professor);
     }
 
-    public ProfessorResponse findById(int id){
+    public ProfessorResponse findById(long id){
         Professor professor = professorRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Professor not found"));
         
@@ -48,7 +48,7 @@ public class ProfessorService {
                 .toList();
     }
 
-    public ProfessorResponse update(int id, UpdateProfessorRequest request) {
+    public ProfessorResponse update(long id, UpdateProfessorRequest request) {
         Professor professor = professorRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -62,7 +62,7 @@ public class ProfessorService {
         return professorMapper.toResponse(professor);
     }
 
-    public void deletar(int id) {
+    public void deletar(long id) {
         professorRepository.deleteById(id);
     }
 

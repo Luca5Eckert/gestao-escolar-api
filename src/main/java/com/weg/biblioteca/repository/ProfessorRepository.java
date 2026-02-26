@@ -19,7 +19,7 @@ public class ProfessorRepository {
                 SELECT
                     u.id,
                     u.nome,
-                    u.email,
+                    u.codigo,
                     u.disciplina
                 FROM
                     professor u
@@ -35,7 +35,7 @@ public class ProfessorRepository {
                 Professor professor = new Professor(
                         resultSet.getLong("id"),
                         resultSet.getString("nome"),
-                        resultSet.getString("email"),
+                        resultSet.getString("codigo"),
                         resultSet.getString("disciplina")
                 );
                 professores.add(professor);
@@ -53,7 +53,7 @@ public class ProfessorRepository {
                 SELECT
                     u.id,
                     u.nome,
-                    u.email,
+                    u.codigo,
                     u.disciplina
                 FROM
                     professor u
@@ -72,7 +72,7 @@ public class ProfessorRepository {
                     Professor professor = new Professor(
                             resultSet.getLong("id"),
                             resultSet.getString("nome"),
-                            resultSet.getString("email"),
+                            resultSet.getString("codigo"),
                             resultSet.getString("disciplina")
                     );
                     return Optional.of(professor);
@@ -87,7 +87,7 @@ public class ProfessorRepository {
 
     public Professor save(Professor professor) {
         String query = """
-                INSERT INTO professor (nome, email, disciplina)
+                INSERT INTO professor (nome, codigo, disciplina)
                 VALUES (?, ?, ?)
                 """;
 
@@ -121,7 +121,7 @@ public class ProfessorRepository {
     public Professor update(Professor professor) {
         String query = """
                 UPDATE professor
-                SET nome = ?, email = ?, disciplina = ?
+                SET nome = ?, codigo = ?, disciplina = ?
                 WHERE id = ?
                 """;
 

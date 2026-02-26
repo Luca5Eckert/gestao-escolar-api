@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 public class Aluno {
 
-    private int id;
+    private long id;
 
     private String nome;
 
@@ -21,7 +21,7 @@ public class Aluno {
         this.dataNascimento = dataNascimento;
     }
 
-    public Aluno(int id, String nome, String email, String matricula, LocalDate dataNascimento) {
+    public Aluno(long id, String nome, String email, String matricula, LocalDate dataNascimento) {
         this.id = id;
         this.nome = nome;
         this.email = email;
@@ -29,7 +29,7 @@ public class Aluno {
         this.dataNascimento = dataNascimento;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 

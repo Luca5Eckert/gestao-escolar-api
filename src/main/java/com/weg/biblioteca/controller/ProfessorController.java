@@ -32,14 +32,14 @@ public class ProfessorController {
 
     @GetMapping("/{id}")
     public ProfessorResponse findById(
-            @PathVariable(value = "id") int id
+            @PathVariable(value = "id") long id
     ) {
         return professorService.findById(id);
     }
 
     @PutMapping("{id}")
     public ProfessorResponse update(
-            @PathVariable(name = "id") int id,
+            @PathVariable(name = "id") long id,
             @RequestBody UpdateProfessorRequest updateProfessorRequest
     ) {
         return professorService.update(id, updateProfessorRequest);
@@ -47,7 +47,7 @@ public class ProfessorController {
 
     @DeleteMapping("{id}")
     public void delete(
-            @PathVariable(name = "id") int id
+            @PathVariable(name = "id") long id
     ) {
         professorService.deletar(id);
     }
