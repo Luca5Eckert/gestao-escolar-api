@@ -20,7 +20,7 @@ public class AlunoRepository {
                 SELECT
                     u.id,
                     u.nome,
-                    u.codigo,
+                    u.email,
                     u.matricula,
                     u.data_nascimento
                 FROM
@@ -37,7 +37,7 @@ public class AlunoRepository {
                 Aluno aluno = new Aluno(
                         resultSet.getInt("id"),
                         resultSet.getString("nome"),
-                        resultSet.getString("codigo"),
+                        resultSet.getString("email"),
                         resultSet.getString("matricula"),
                         resultSet.getDate("data_nascimento").toLocalDate()
                 );
@@ -56,7 +56,7 @@ public class AlunoRepository {
                 SELECT
                     u.id,
                     u.nome,
-                    u.codigo,
+                    u.email,
                     u.matricula,
                     u.data_nascimento
                 FROM
@@ -76,7 +76,7 @@ public class AlunoRepository {
                     Aluno aluno = new Aluno(
                             resultSet.getInt("id"),
                             resultSet.getString("nome"),
-                            resultSet.getString("codigo"),
+                            resultSet.getString("email"),
                             resultSet.getString("matricula"),
                             resultSet.getDate("data_nascimento").toLocalDate()
                     );
@@ -92,7 +92,7 @@ public class AlunoRepository {
 
     public Aluno save(Aluno aluno) {
         String query = """
-                INSERT INTO aluno (nome, codigo, matricula, data_nascimento)
+                INSERT INTO aluno (nome, email, matricula, data_nascimento)
                 VALUES (?, ?, ?, ?)
                 """;
 
@@ -127,7 +127,7 @@ public class AlunoRepository {
     public Aluno update(Aluno aluno) {
         String query = """
                 UPDATE aluno
-                SET nome = ?, codigo = ?, matricula = ?, data_nascimento = ?
+                SET nome = ?, email = ?, matricula = ?, data_nascimento = ?
                 WHERE id = ?
                 """;
 
@@ -198,7 +198,7 @@ public class AlunoRepository {
         String query = """
                 SELECT COUNT(*)
                 FROM aluno
-                WHERE codigo = ?
+                WHERE email = ?
                 """;
 
         try (Connection connection = Conexao.toInstance();
