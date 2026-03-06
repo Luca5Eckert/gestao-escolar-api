@@ -4,6 +4,7 @@ import com.weg.biblioteca.dto.turma_aluno.TurmaAlunoResponse;
 import com.weg.biblioteca.dto.turma_aluno.CreateTurmaAlunoRequest;
 import com.weg.biblioteca.dto.turma_aluno.UpdateTurmaAlunoRequest;
 import com.weg.biblioteca.service.TurmaAlunoService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,7 +21,7 @@ public class TurmaAlunoController {
 
     @PostMapping
     public TurmaAlunoResponse create(
-            @RequestBody CreateTurmaAlunoRequest request
+            @RequestBody @Valid CreateTurmaAlunoRequest request
     ) {
         return turmaAlunoService.create(request);
     }

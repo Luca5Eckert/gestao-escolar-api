@@ -4,6 +4,7 @@ import com.weg.biblioteca.dto.aula.AulaResponse;
 import com.weg.biblioteca.dto.aula.CreateAulaRequest;
 import com.weg.biblioteca.dto.aula.UpdateAulaRequest;
 import com.weg.biblioteca.service.AulaService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,7 +21,7 @@ public class AulaController {
 
     @PostMapping
     public AulaResponse create(
-            @RequestBody CreateAulaRequest request
+            @RequestBody @Valid CreateAulaRequest request
     ) {
         return aulaService.create(request);
     }

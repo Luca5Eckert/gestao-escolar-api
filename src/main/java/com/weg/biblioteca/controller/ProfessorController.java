@@ -4,6 +4,7 @@ import com.weg.biblioteca.dto.professor.ProfessorResponse;
 import com.weg.biblioteca.dto.professor.CreateProfessorRequest;
 import com.weg.biblioteca.dto.professor.UpdateProfessorRequest;
 import com.weg.biblioteca.service.ProfessorService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,7 +21,7 @@ public class ProfessorController {
 
     @PostMapping
     public ProfessorResponse create(
-            @RequestBody CreateProfessorRequest request
+            @RequestBody @Valid CreateProfessorRequest request
     ) {
         return professorService.create(request);
     }

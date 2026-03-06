@@ -5,6 +5,7 @@ import com.weg.biblioteca.dto.turma.TurmaResponse;
 import com.weg.biblioteca.dto.turma.CreateTurmaRequest;
 import com.weg.biblioteca.dto.turma.UpdateTurmaRequest;
 import com.weg.biblioteca.service.TurmaService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,7 +22,7 @@ public class TurmaController {
 
     @PostMapping
     public TurmaResponse create(
-            @RequestBody CreateTurmaRequest request
+            @RequestBody @Valid CreateTurmaRequest request
     ) {
         return turmaService.create(request);
     }

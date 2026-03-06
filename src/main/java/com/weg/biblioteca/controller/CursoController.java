@@ -5,6 +5,7 @@ import com.weg.biblioteca.dto.curso.CreateCursoRequest;
 import com.weg.biblioteca.dto.curso.UpdateCursoRequest;
 import com.weg.biblioteca.dto.turma.TurmaResponse;
 import com.weg.biblioteca.service.CursoService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,7 +22,7 @@ public class CursoController {
 
     @PostMapping
     public CursoResponse create(
-            @RequestBody CreateCursoRequest request
+            @RequestBody @Valid CreateCursoRequest request
     ) {
         return cursoService.create(request);
     }

@@ -4,6 +4,7 @@ import com.weg.biblioteca.dto.aluno.CreateAlunoRequest;
 import com.weg.biblioteca.dto.aluno.UpdateAlunoRequest;
 import com.weg.biblioteca.dto.aluno.AlunoResponse;
 import com.weg.biblioteca.service.AlunoService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,7 +33,7 @@ public class AlunoController {
 
     @GetMapping("/{id}")
     public AlunoResponse findById(
-            @PathVariable(value = "id") long id
+            @PathVariable(value = "id") @Valid long id
     ) {
         return alunoService.findById(id);
     }

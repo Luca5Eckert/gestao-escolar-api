@@ -4,6 +4,7 @@ import com.weg.biblioteca.dto.nota.NotaResponse;
 import com.weg.biblioteca.dto.nota.CreateNotaRequest;
 import com.weg.biblioteca.dto.nota.UpdateNotaRequest;
 import com.weg.biblioteca.service.NotaService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,7 +21,7 @@ public class NotaController {
 
     @PostMapping
     public NotaResponse create(
-            @RequestBody CreateNotaRequest request
+            @RequestBody @Valid CreateNotaRequest request
     ) {
         return notaService.create(request);
     }
